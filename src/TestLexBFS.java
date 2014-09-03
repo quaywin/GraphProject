@@ -16,7 +16,6 @@ public class TestLexBFS {
 	static Graph.Edge<String> E1;
 
 	public static void main(String[] args) {
-		// Test part 3,4
 		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE };
 		String[][] edges = { { ONE, TWO },{ TWO, TWO }, { ONE, THREE }, { THREE, TWO } ,{THREE,FOUR},{ ONE, FOUR },{ FIVE, ONE } ,{FIVE,FOUR}};
 		g = new SimpleGraph<String, DirectedEdge<String>>();

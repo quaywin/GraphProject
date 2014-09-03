@@ -14,7 +14,6 @@ public class TestLexBFS {
 	static final String FIVE = "five";
 
 	static Graph.Edge<String> E1;
-
 	public static void main(String[] args) {
 		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE };
 		String[][] edges = { { ONE, TWO },{ TWO, TWO }, { ONE, THREE }, { THREE, TWO } ,{THREE,FOUR},{ ONE, FOUR },{ FIVE, ONE } ,{FIVE,FOUR}};

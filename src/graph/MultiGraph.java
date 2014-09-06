@@ -182,8 +182,8 @@ public class MultiGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 				else {
 					outgoingMultiEdges.get(source).remove(target);
 					predecessors.get(target).remove(source);
-					neighbors.get(source).remove(target);
-					neighbors.get(target).remove(source);
+					//neighbors.get(source).remove(target);
+					//neighbors.get(target).remove(source);
 				}
 				outgoingEdges.get(source).remove(e);
 				incomingEdges.get(target).remove(e);
@@ -456,4 +456,21 @@ public class MultiGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	public Subgraph<V, E> subgraph(Set<V> vertices, Set<E> edges) {
 		return new SubMultiGraph<V, E>(this, vertices, edges);
 	}
+	
+	public MultiGraph<V,DirectedEdge<V>> undirectedGraph() {
+		MultiGraph<V,DirectedEdge<V>> graph = new MultiGraph<V,DirectedEdge<V>>();
+		DirectedEdge<V> edge;
+		for (V v : this.vertices()) {
+			graph.addVertex(v);
+		}
+		for (Edge<V> e : this.edges()) {
+			edge = new DirectedEdge<V>(e.source(), e.target());
+			graph.addEdge(edge);
+			if(!this.edges.contains(edge.getOppositeEdge())){
+				graph.edges.add(edge.getOppositeEdge());
+			}
+		}
+		return graph;
+	}
+	
 }

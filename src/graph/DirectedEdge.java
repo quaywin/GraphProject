@@ -25,6 +25,10 @@ public class DirectedEdge<V> implements Graph.Edge<V> {
 		else
 			throw new IllegalArgumentException();
 	}
+	
+	public DirectedEdge<V>  getOppositeEdge() {
+		return new DirectedEdge<V>(target, source);
+	}
 
 	public V source() {
 		return source;

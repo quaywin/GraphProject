@@ -11,17 +11,23 @@ public class ComparabilityGraph<V> {
 	}
 	
 	public boolean checkComparabilityGraph(MultiGraph<V, DirectedEdge<V>> graph) {
-		MultiGraph<V, DirectedEdge<V>> undirectedGraph = new MultiGraph<V, DirectedEdge<V>>();
-		undirectedGraph = graph;
+		//Create a undirected graph
+		MultiGraph<V, DirectedEdge<V>> undirectedGraph = graph;
+		//Create a directed graph
 		MultiGraph<V, DirectedEdge<V>> directGraph = new MultiGraph<V, DirectedEdge<V>>();
 		for (V v : graph.vertices()) {
 			directGraph.addVertex(v);
 		}
+		// List Edge Implicant and EdgeToFindImplicant
 		Set<DirectedEdge<V>> listEdgeImplicant = new HashSet<DirectedEdge<V>>();
 		Set<DirectedEdge<V>> listEdgeToFindImplicant = new HashSet<DirectedEdge<V>>();
+		// Initial arbitrarily Edge
 		DirectedEdge<V> arbitrarilyEdge = undirectedGraph.edges().iterator().next();
+		// Add this edge to directed graph
 		directGraph.addEdge(arbitrarilyEdge);
+		// Add this edge to list edge to find implicant
 		listEdgeToFindImplicant.add(arbitrarilyEdge);
+		// Remove this edge in undirected graph 
 		undirectedGraph.removeEdge(arbitrarilyEdge);
 		for (DirectedEdge<V> directedEdge : undirectedGraph.incomingEdges(arbitrarilyEdge.source())) {
 			if(directedEdge.source().equals(arbitrarilyEdge.target())){
@@ -30,14 +36,21 @@ public class ComparabilityGraph<V> {
 			}
 		}
 		
-		while (!listEdgeToFindImplicant.isEmpty()) {			
+		
+		while (!listEdgeToFindImplicant.isEmpty()) {	
+			// get an edge is a first edge in listEdgeToFindImplicant
 			arbitrarilyEdge = listEdgeToFindImplicant.iterator().next();
+			// then remove it in listEdgeToFindImplicant
 			listEdgeToFindImplicant.remove(arbitrarilyEdge);
+			// Find list listEdgeImplicant
 			listEdgeImplicant = ListEdgeImplicant(undirectedGraph,arbitrarilyEdge);	
 			if(!listEdgeImplicant.isEmpty()){
 				for (DirectedEdge<V> edge : listEdgeImplicant) {
+					// add edge in listEdgeImplicant into directed graph
 					directGraph.addEdge(edge);
+					// add edge in listEdgeImplicant into listEdgeToFindImplicant
 					listEdgeToFindImplicant.add(edge);
+					// remove this add on undirected graph
 					undirectedGraph.removeEdge(edge);
 					for (DirectedEdge<V> directedEdge : undirectedGraph.incomingEdges(edge.source())) {
 						if(directedEdge.source().equals(edge.target())){
@@ -48,8 +61,9 @@ public class ComparabilityGraph<V> {
 				}
 			}
 		}
-		
+		// check directly for directed graph
 		if(testDirectForGraph(directGraph)){
+			// if still edge remain in undirected graph, we call check comparability for this remain part graph
 			if(!undirectedGraph.edges().isEmpty()){
 				return checkComparabilityGraph(undirectedGraph);
 			}
@@ -58,9 +72,14 @@ public class ComparabilityGraph<V> {
 		return false;
 	}
 	
+	
+	//test direct for graph
 	private boolean testDirectForGraph(MultiGraph<V, DirectedEdge<V>> directGraph){
+		// Create  map for list vertex out going of vertex
 		Map<V,Set<V>> mapVertexOutGoing =  new HashMap<V,Set<V>>();
+		// Create map for list vertex of list vertex out going of vertex
 		Map<V,Set<V>> mapVertexW=  new HashMap<V,Set<V>>();	
+		// Initial Map out going
 		for (V v : directGraph.vertices()) {
 			mapVertexOutGoing.put(v, new HashSet<V>());
 			for (DirectedEdge<V> edge : directGraph.outgoingEdges(v)) {
@@ -68,6 +87,7 @@ public class ComparabilityGraph<V> {
 			}
 		}
 		
+		//Initial map W
 		for (V v : directGraph.vertices()) {
 			mapVertexW.put(v, new HashSet<V>());
 			for (V v_v : mapVertexOutGoing.get(v)) {
@@ -77,6 +97,7 @@ public class ComparabilityGraph<V> {
 			}
 		}
 		
+		// check it
 		for (V v : directGraph.vertices()) {
 			for (V v_w : mapVertexW.get(v)) {
 				if(!mapVertexOutGoing.get(v).contains(v_w)){
@@ -88,13 +109,17 @@ public class ComparabilityGraph<V> {
 		return true;
 	}
 	
+	// Get list edge implicant
 	private Set<DirectedEdge<V>> ListEdgeImplicant(MultiGraph<V, DirectedEdge<V>> graph,DirectedEdge<V> edge) {
+		
 		Set<DirectedEdge<V>> listDirectedEdge = new HashSet<DirectedEdge<V>>();
+		// add edge neighbor from source of current edge
 		for (DirectedEdge<V> neiFormSource : graph.outgoingEdges(edge.source())) {
 			if(!graph.areNeighbors(neiFormSource.target(),edge.target())){
 				listDirectedEdge.add(neiFormSource);
 			}
 		}
+		// add edge neighbor from target of current edge
 		for (DirectedEdge<V> neiFormTarget : graph.incomingEdges(edge.target())) {
 			if(!graph.areNeighbors(neiFormTarget.source(),edge.source())){
 				listDirectedEdge.add(neiFormTarget);

@@ -30,14 +30,18 @@ public class LexBFS<V> {
 	}
 	
 	public ArrayList<V> LexBFSOrdering(SimpleGraph<V,DirectedEdge<V>> graph, V s) {
+		//Create list order
 		ArrayList<V> ordering = new ArrayList<V>();
+		//Create map label for earch vertex
 		Map<V, ArrayList<Integer>> label = new HashMap<V, ArrayList<Integer>>();
 		for (V v : graph.vertices()) {
 			label.put(v,new ArrayList<Integer>());
 		}
+		//Get list ordering with label
 		for (int i = graph.order()-1; i > -1; i--) {
 			V v;
 			if(!ordering.isEmpty()){
+				// Get vertex with lagest label
 				v = getVertexWithLexicographicallyLagestLabel(label);
 				ordering.add(v);
 			}else {
@@ -45,6 +49,7 @@ public class LexBFS<V> {
 				ordering.add(v);
 			}
 			label.remove(v);
+			// Set label for neighbor of each vertex
 			for (V w : graph.neighbors(v)) {
 				if(!ordering.contains(w)){
 					label.get(w).add(i);
@@ -58,6 +63,7 @@ public class LexBFS<V> {
 	private V getVertexWithLexicographicallyLagestLabel(Map<V, ArrayList<Integer>> label){
 		V vertex = null;
 		int largest = 0;
+		// Get vertex that is lagest label. In this case we compare the first lable
 		for (Map.Entry<V, ArrayList<Integer>> item : label.entrySet()) {
 			if(!item.getValue().isEmpty())
 				if(item.getValue().get(0)>largest){
@@ -69,8 +75,11 @@ public class LexBFS<V> {
 	}
 	
 	public boolean checkIsPerfectEliminationOdering(SimpleGraph<V,DirectedEdge<V>> graph,ArrayList<V> ordering) {
+		//Create map parent with verter is neighbor that nearlest in right
 		Map<V, V> parent = new HashMap<V, V>();
-		Map<V, Set<V>> RN = new HashMap<V, Set<V>>();	
+		//Creat map RN with list vertex of neighbor in right
+		Map<V, Set<V>> RN = new HashMap<V, Set<V>>();
+		// Initial map parent and RN
 		for (V v : graph.vertices()) {
 			Set<V> termRN = new HashSet<V>();
 			for (V nei : graph.neighbors(v)) {
@@ -85,15 +94,19 @@ public class LexBFS<V> {
 			}
 			RN.put(v, termRN);			
 		}
+		// Check list ordering
 		for (V v : graph.vertices()) {
 			Set<V> parentRN = new HashSet<V>();
 			if(parent.get(v)!=null){
+				// Inital list vertex is neighbor in right of parent
 				for (V nei : graph.neighbors(parent.get(v))) {
 					if(ordering.indexOf(nei)>ordering.indexOf(v)){
 						parentRN.add(nei);
 					}
 				}
+				// Remove element parent in list RN
 				RN.get(v).remove(parent.get(v));
+				// Check condition for list
 				for (V rn : RN.get(v)) {
 					if(!parentRN.contains(rn))
 						return false;

@@ -21,7 +21,7 @@ public class TestIntervalGenerate {
 		intervals.addVertex(c);
 		intervals.addVertex(d);
 		intervals.addVertex(e);
-		g = intervals.generateGraph();
+		g = intervals.generateFromIntervalToGraph();
 		System.out.print("vertices =");
 		for (Interval i : g.vertices())
 			System.out.print(" " + i.name());
@@ -32,7 +32,7 @@ public class TestIntervalGenerate {
 			System.out.print(" (" + edges.source().name() + "," + edges.target().name() + ")");
 		}
 		
-		g = intervals.generateGraph().complementaryGraph();
+		g = intervals.generateFromIntervalToGraph().complementaryGraph();
 		for (Interval vertex : g.vertices()) {
 			multi.addVertex(vertex);
 		}

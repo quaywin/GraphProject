@@ -1,11 +1,12 @@
 package graph;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class IntervalGraph<E extends Graph.Edge<Interval>> implements Graph<Interval, E> {
 	private SimpleGraph<Interval, E> delegate = new SimpleGraph<Interval, E>();
-	public <V, E extends Graph.Edge<Interval>> SimpleGraph<Interval,DirectedEdge<Interval>> generateGraph() {
+	public <V, E extends Graph.Edge<Interval>> SimpleGraph<Interval,DirectedEdge<Interval>> generateFromIntervalToGraph() {
 		SimpleGraph<Interval,DirectedEdge<Interval>> graph = new SimpleGraph<Interval,DirectedEdge<Interval>>();
 		DirectedEdge<Interval> edge;
 		for (Interval interval : this.vertices()) {
@@ -23,6 +24,9 @@ public class IntervalGraph<E extends Graph.Edge<Interval>> implements Graph<Inte
 		}
 		return graph;
 	}	
+	
+	
+	
 	@Override
 	public boolean addEdge(E edge) {
 		// TODO Auto-generated method stub

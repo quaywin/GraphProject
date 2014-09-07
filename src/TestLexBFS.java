@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import graph.ChordalGraphs;
 import graph.DirectedEdge;
 import graph.Graph;
 import graph.LexBFS;
@@ -12,11 +13,12 @@ public class TestLexBFS {
 	static final String THREE = "three";
 	static final String FOUR = "four";
 	static final String FIVE = "five";
-
+	static final String SIX = "six";
+	
 	static Graph.Edge<String> E1;
 	public static void main(String[] args) {
-		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE };
-		String[][] edges = { { ONE, TWO },{ TWO, TWO }, { ONE, THREE }, { THREE, TWO } ,{THREE,FOUR},{ ONE, FOUR },{ FIVE, ONE } ,{FIVE,FOUR}};
+		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE};
+		String[][] edges = { { ONE, TWO }, { ONE, THREE }, { TWO, FOUR } ,{ONE,FOUR},{ THREE, FOUR },{ONE,FIVE},{THREE,FIVE} };
 		g = new SimpleGraph<String, DirectedEdge<String>>();
 		for (String v : vertices)
 			g.addVertex(v);
@@ -32,17 +34,32 @@ public class TestLexBFS {
 			System.out.print(" (" + e.source() + "," + e.target() + ")");
 		System.out.println();
 		LexBFS<String> lexbfs = new LexBFS<String>();
-		ArrayList<String> ordering = lexbfs.LexBFSOrdering(g,FOUR);
-		System.out.print("LexBFS order = ");
 		
-		for (String strings : ordering) {
-			System.out.print(" " + strings);
+		
+		for (String v : g.vertices()) {
+			ArrayList<String> ordering = lexbfs.LexBFSOrdering(g,v);
+			System.out.print("LexBFS order = ");
+			
+			for (String strings : ordering) {
+				System.out.print(" " + strings);
+			}
+
+			System.out.println();
+			System.out.print("LexBFS is perfect elimination order = ");
+			
+			if(lexbfs.checkIsPerfectEliminationOdering(g, ordering)){
+				System.out.print(" "+true);
+			}else{
+				System.out.print(" "+false);
+			}
+			System.out.println();
 		}
 		
-		System.out.println();
-		boolean test = lexbfs.checkIsPerfectEliminationOdering(g, ordering);
-		System.out.print("LexBFS is perfect elimination order = ");
-		System.out.print(" "+test);
+		ChordalGraphs<String> chordalGraphs = new ChordalGraphs<>();
+		chordalGraphs.generateFromGraphToSetInterval(g);
+		
+		//boolean test = lexbfs.checkIsPerfectEliminationOdering(g, ordering);
+		
 		
 		
 	}

@@ -106,6 +106,7 @@ public class MultiGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	}
 
 	/**
+	 * 
 	 * The remove operation with a vertex iterator is not supported so an
 	 * unsupported operation exception will be raised in this case.
 	 * 

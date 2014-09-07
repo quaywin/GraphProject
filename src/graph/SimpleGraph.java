@@ -1,6 +1,7 @@
 package graph;
 
 
+import graph.Graph.Edge;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	private Edges edges = new Edges();
 	private Vertices vertices = new Vertices();
 	private Map<V, Set<V>> neighborsMap = new HashMap<V, Set<V>>();
-
+	private Map<V, Set<E>> outgoingEdges = new HashMap<V, Set<E>>();
+	private Map<V, Set<E>> incomingEdges = new HashMap<V, Set<E>>();
+	
 	private class VertexOrEdgeIterator<T> implements Iterator<T> {
 
 		Iterator<T> delegate;
@@ -62,6 +65,12 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 		}
 	}
 	
+	private class EdgeIterable extends VertexOrEdgeIterable<E> {
+		EdgeIterable(Iterable<E> iterable) {
+			super(iterable);
+		}
+	}
+	
 	private class VertexOrEdgeIterable<T> implements Iterable<T> {
 
 		Iterable<T> delegate;
@@ -88,6 +97,8 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 			boolean modified = super.add(v);
 			if(modified){
 				neighborsMap.put(v, new HashSet<V>());
+				outgoingEdges.put(v, new HashSet<E>());
+				incomingEdges.put(v, new HashSet<E>());
 			}
 			return modified;
 		}
@@ -96,6 +107,8 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 			boolean modified = super.remove(o);
 			if(modified){
 				neighborsMap.remove(o);
+				outgoingEdges.remove(o);
+				incomingEdges.remove(o);
 			}
 			return modified;
 		}
@@ -120,6 +133,9 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 				if(modified){
 					neighborsMap.get(e.source()).add(e.target());
 					neighborsMap.get(e.target()).add(e.source());
+
+					outgoingEdges.get(e.source()).add(e);
+					incomingEdges.get(e.target()).add(e);
 				}				
 			}
 			
@@ -131,8 +147,10 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 				if(modified){
 					V source = e.source();
 					V target = e.target();
-					neighborsMap.get(source).remove(target);
-					neighborsMap.get(target).remove(source);
+					//neighborsMap.get(source).remove(target);
+					//neighborsMap.get(target).remove(source);
+					outgoingEdges.get(source).remove(e);
+					incomingEdges.get(target).remove(e);
 				}
 			}
 			return modified;
@@ -250,7 +268,9 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	@Override
 	public int degree(V vertex) {
 		// TODO Auto-generated method stub
-		return 0;
+		checkExistingVertex(vertex);
+		return outgoingEdges.get(vertex).size()
+				+ incomingEdges.get(vertex).size();
 	}
 
 	@Override
@@ -280,13 +300,15 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	@Override
 	public Iterable<E> incomingEdges(V vertex) {
 		// TODO Auto-generated method stub
-		return null;
+		checkExistingVertex(vertex);
+		return new EdgeIterable(incomingEdges.get(vertex));
 	}
 
 	@Override
 	public Iterable<E> outgoingEdges(V vertex) {
 		// TODO Auto-generated method stub
-		return null;
+		checkExistingVertex(vertex);
+		return new EdgeIterable(outgoingEdges.get(vertex));
 	}
 
 	@Override
@@ -343,6 +365,33 @@ public class SimpleGraph<V, E extends Graph.Edge<V>> implements Graph<V, E> {
 	public Subgraph<V, E> subgraph(Set<V> vertices, Set<E> edges) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public MultiGraph<V, E> multiGraph() {
+		MultiGraph<V, E> multigraph = new MultiGraph<V, E>();
+		for (V vertex : this.vertices()) {
+			multigraph.addVertex(vertex);
+		}
+		for (E edge : this.edges()) {
+			multigraph.addEdge(edge);
+		}
+		return multigraph;
+	}
+	
+	public SimpleGraph<V,DirectedEdge<V>> undirectedGraph() {
+		SimpleGraph<V,DirectedEdge<V>> graph = new SimpleGraph<V,DirectedEdge<V>>();
+		DirectedEdge<V> edge;
+		for (V v : this.vertices()) {
+			graph.addVertex(v);
+		}
+		for (Edge<V> e : this.edges()) {
+			edge = new DirectedEdge<V>(e.source(), e.target());
+			graph.addEdge(edge);
+			if(!this.edges.contains(edge.getOppositeEdge())){
+				graph.edges.add(edge.getOppositeEdge());
+			}
+		}
+		return graph;
 	}
 
 }

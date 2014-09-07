@@ -35,19 +35,10 @@ public class TestComparabilityGraph {
 		System.out.println();
 		
 		ComparabilityGraph<String> comparabilityGraph = new ComparabilityGraph<String>();
-		MultiGraph<String, DirectedEdge<String>> multigraph = new MultiGraph<String, DirectedEdge<String>>();
-		for (String vertex : g.vertices()) {
-			multigraph.addVertex(vertex);
-		}
-		for (DirectedEdge<String> edge : g.edges()) {
-			multigraph.addEdge(edge);
-		}
-		boolean check = comparabilityGraph.checkComparabilityGraph(multigraph.undirectedGraph());
 		
-		System.out.print("check comparability = "+ check);
+		boolean check = comparabilityGraph.checkComparabilityGraph(g.undirectedGraph());
 		
-		
-		
+		System.out.print("check comparability = "+ check);		
 		
 	}
 }

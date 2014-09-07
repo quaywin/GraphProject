@@ -10,11 +10,11 @@ public class ComparabilityGraph<V> {
 		
 	}
 	
-	public boolean checkComparabilityGraph(MultiGraph<V, DirectedEdge<V>> graph) {
+	public boolean checkComparabilityGraph(SimpleGraph<V, DirectedEdge<V>> graph) {
 		//Create a undirected graph
-		MultiGraph<V, DirectedEdge<V>> undirectedGraph = graph;
+		SimpleGraph<V, DirectedEdge<V>> undirectedGraph = graph;
 		//Create a directed graph
-		MultiGraph<V, DirectedEdge<V>> directGraph = new MultiGraph<V, DirectedEdge<V>>();
+		SimpleGraph<V, DirectedEdge<V>> directGraph = new SimpleGraph<V, DirectedEdge<V>>();
 		for (V v : graph.vertices()) {
 			directGraph.addVertex(v);
 		}
@@ -35,7 +35,6 @@ public class ComparabilityGraph<V> {
 				break;
 			}
 		}
-		
 		
 		while (!listEdgeToFindImplicant.isEmpty()) {	
 			// get an edge is a first edge in listEdgeToFindImplicant
@@ -62,7 +61,13 @@ public class ComparabilityGraph<V> {
 			}
 		}
 		// check directly for directed graph
+		System.out.println();
+		System.out.print("direct edges =");
+		for (DirectedEdge<V> e : directGraph.edges())
+			System.out.print(" (" + e.source() + "," + e.target() + ")");
+		System.out.println();
 		if(testDirectForGraph(directGraph)){
+			
 			// if still edge remain in undirected graph, we call check comparability for this remain part graph
 			if(!undirectedGraph.edges().isEmpty()){
 				return checkComparabilityGraph(undirectedGraph);
@@ -74,7 +79,7 @@ public class ComparabilityGraph<V> {
 	
 	
 	//test direct for graph
-	private boolean testDirectForGraph(MultiGraph<V, DirectedEdge<V>> directGraph){
+	private boolean testDirectForGraph(SimpleGraph<V, DirectedEdge<V>> directGraph){
 		// Create  map for list vertex out going of vertex
 		Map<V,Set<V>> mapVertexOutGoing =  new HashMap<V,Set<V>>();
 		// Create map for list vertex of list vertex out going of vertex
@@ -110,7 +115,7 @@ public class ComparabilityGraph<V> {
 	}
 	
 	// Get list edge implicant
-	private Set<DirectedEdge<V>> ListEdgeImplicant(MultiGraph<V, DirectedEdge<V>> graph,DirectedEdge<V> edge) {
+	private Set<DirectedEdge<V>> ListEdgeImplicant(SimpleGraph<V, DirectedEdge<V>> graph,DirectedEdge<V> edge) {
 		
 		Set<DirectedEdge<V>> listDirectedEdge = new HashSet<DirectedEdge<V>>();
 		// add edge neighbor from source of current edge

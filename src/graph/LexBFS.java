@@ -32,7 +32,7 @@ public class LexBFS<V> {
 	public ArrayList<V> LexBFSOrdering(SimpleGraph<V,DirectedEdge<V>> graph, V s) {
 		//Create list order
 		ArrayList<V> ordering = new ArrayList<V>();
-		//Create map label for earch vertex
+		//Create map label for each vertex
 		Map<V, ArrayList<Integer>> label = new HashMap<V, ArrayList<Integer>>();
 		for (V v : graph.vertices()) {
 			label.put(v,new ArrayList<Integer>());
@@ -41,7 +41,7 @@ public class LexBFS<V> {
 		for (int i = graph.order()-1; i > -1; i--) {
 			V v;
 			if(!ordering.isEmpty()){
-				// Get vertex with lagest label
+				// Get vertex with largest label
 				v = getVertexWithLexicographicallyLagestLabel(label);
 				ordering.add(v);
 			}else {
@@ -86,31 +86,46 @@ public class LexBFS<V> {
 				if(ordering.indexOf(nei)>ordering.indexOf(v)){
 					termRN.add(nei);
 					if(parent.get(v)==null)
-						parent.put(v, nei);
+						parent.put(v, nei);					
 					else if(ordering.indexOf(nei)<ordering.indexOf(parent.get(v))){
 						parent.put(v, nei);
 					}
 				}
 			}
-			RN.put(v, termRN);			
+			
+			if(parent.get(v)!=null){
+				RN.put(v, termRN);
+			}
+			
 		}
 		// Check list ordering
 		for (V v : graph.vertices()) {
-			Set<V> parentRN = new HashSet<V>();
 			if(parent.get(v)!=null){
-				// Inital list vertex is neighbor in right of parent
+				Set<V> xRN = new HashSet<V>();
 				for (V nei : graph.neighbors(parent.get(v))) {
 					if(ordering.indexOf(nei)>ordering.indexOf(v)){
-						parentRN.add(nei);
+						xRN.add(nei);
 					}
 				}
+				// Initial list vertex is neighbor in right of parent
 				// Remove element parent in list RN
 				RN.get(v).remove(parent.get(v));
 				// Check condition for list
-				for (V rn : RN.get(v)) {
-					if(!parentRN.contains(rn))
-						return false;
+				if(!RN.get(v).isEmpty()){
+					for (V rn : RN.get(v)) {
+						if(!xRN.contains(rn))
+							return false;
+					}
 				}
+				
+			}
+		}
+		return true;
+	}
+	private boolean checkInClique(SimpleGraph<V,DirectedEdge<V>> graph,Set<V> set,V vertex) {
+		for (V v : set) {
+			if(!graph.areNeighbors(vertex, v)){
+				return false;
 			}
 		}
 		return true;

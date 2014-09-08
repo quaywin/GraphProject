@@ -15,7 +15,8 @@ public class TestComputeIntervalGraph {
 	static final String FOUR = "four";
 	static final String FIVE = "five";
 	static final String SIX = "six";
-	
+	static final String SEVEN = "seven";
+	static final String EIGHT = "eight";
 	static Graph.Edge<String> E1;
 	public static void main(String[] args) {
 		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE};

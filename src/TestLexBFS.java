@@ -8,6 +8,7 @@ import graph.SimpleGraph;
 
 public class TestLexBFS {
 	static SimpleGraph<String, DirectedEdge<String>> g;
+<<<<<<< HEAD
 	static final String ONE = "A";
 	static final String TWO = "B";
 	static final String THREE = "C";
@@ -15,6 +16,16 @@ public class TestLexBFS {
 	static final String FIVE = "E";
 	static final String SIX = "F";
 	static final String SEVEN = "G";
+=======
+	static final String ONE = "one";
+	static final String TWO = "two";
+	static final String THREE = "three";
+	static final String FOUR = "four";
+	static final String FIVE = "five";
+	static final String SIX = "six";
+	static final String SEVEN = "seven";
+	static final String EIGHT = "eight";
+>>>>>>> FETCH_HEAD
 	static Graph.Edge<String> E1;
 	public static void main(String[] args) {
 		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE,SIX};

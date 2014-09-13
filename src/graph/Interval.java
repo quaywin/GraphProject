@@ -25,6 +25,14 @@ public class Interval {
 		return x > min && x < max;
 	}
 	
+	public void setMin(double min) {
+		this.min = min;
+	}
+	
+	public void setMax(double max) {
+		this.max = max;
+	}
+	
 	public double min() {		
 		return min;
 	}

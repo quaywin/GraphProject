@@ -42,7 +42,7 @@ public class LexBFS<V> {
 			V v;
 			if(!ordering.isEmpty()){
 				// Get vertex with largest label
-				v = getVertexWithLexicographicallyLagestLabel(label);
+				v = getVertexWithLexicographicallyLagestLabel(graph,label);
 				ordering.add(v);
 			}else {
 				v = s;
@@ -60,16 +60,24 @@ public class LexBFS<V> {
 		return ordering;
 	}
 	
-	private V getVertexWithLexicographicallyLagestLabel(Map<V, ArrayList<Integer>> label){
+	private V getVertexWithLexicographicallyLagestLabel(SimpleGraph<V,DirectedEdge<V>> graph,Map<V, ArrayList<Integer>> label){
 		V vertex = null;
 		int largest = 0;
 		// Get vertex that is lagest label. In this case we compare the first lable
 		for (Map.Entry<V, ArrayList<Integer>> item : label.entrySet()) {
 			if(!item.getValue().isEmpty())
+			{
 				if(item.getValue().get(0)>largest){
 					vertex = item.getKey();
 					largest = item.getValue().get(0);
-				}			
+				}
+				if(item.getValue().get(0)==largest){
+					if(graph.degree(item.getKey())>graph.degree(vertex)){
+						vertex = item.getKey();
+					}
+				}
+			}
+			
 		}
 		return vertex;
 	}

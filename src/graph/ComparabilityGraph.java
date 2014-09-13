@@ -61,11 +61,6 @@ public class ComparabilityGraph<V> {
 			}
 		}
 		// check directly for directed graph
-		System.out.println();
-		System.out.print("direct edges =");
-		for (DirectedEdge<V> e : directGraph.edges())
-			System.out.print(" (" + e.source() + "," + e.target() + ")");
-		System.out.println();
 		if(testDirectForGraph(directGraph)){
 			
 			// if still edge remain in undirected graph, we call check comparability for this remain part graph

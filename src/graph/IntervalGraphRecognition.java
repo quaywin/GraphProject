@@ -2,18 +2,13 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-public class ChordalGraphs<V>{
-	public  ChordalGraphs() {
-		
-	}
-	
+public class IntervalGraphRecognition<V> {
 	public ArrayList<V> ordering(SimpleGraph<V, DirectedEdge<V>> graph) {
 		LexBFS<V> lexbfs = new LexBFS<V>();		
+		ChordalGraphs<V> chordalGraph = new ChordalGraphs<V>();
 		for (V v : graph.vertices()) {			
-			if(lexbfs.checkIsPerfectEliminationOdering(graph, lexbfs.LexBFSOrdering(graph, v))){
+			if(chordalGraph.checkIsPerfectEliminationOdering(graph, lexbfs.LexBFSOrdering(graph, v))){
 				return lexbfs.LexBFSOrdering(graph, v);
 			}
 		}
@@ -128,6 +123,4 @@ public class ChordalGraphs<V>{
 		}
 		return listInterval;
 	}
-
 }
-

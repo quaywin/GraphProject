@@ -1,7 +1,6 @@
 package graph;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 public class IntervalGraph<E extends Graph.Edge<Interval>> implements Graph<Interval, E> {

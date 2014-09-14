@@ -20,6 +20,18 @@ public class Interval {
 		this.max = max;
 		this.name = name;
 	}
+	
+	public void printInterval() {
+		for (double i = min; i < max; i++) {
+			System.out.print("_");
+		}
+	}
+	
+	public void printFirstIntervalInSet() {
+		for (double i = 0; i < min; i++) {
+			System.out.print(" ");
+		}
+	}
 
 	public boolean contains(double x){
 		return x > min && x < max;

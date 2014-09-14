@@ -2,6 +2,11 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class IntervalGraphRecognition<V> {
 	public ArrayList<V> ordering(SimpleGraph<V, DirectedEdge<V>> graph) {
@@ -32,10 +37,14 @@ public class IntervalGraphRecognition<V> {
 	}
 	
 	private double countNeighborIntersectYet(V vertex, ArrayList<V> listVertex,SimpleGraph<V, DirectedEdge<V>> graph){
-		int count = graph.degree(vertex);
+		int count = graph.degree(vertex)+1;
 		for (V v : graph.neighbors(vertex)) {
 			if(listVertex.contains(v)){
 				count --;
+			}else{
+				if(graph.areNeighbors(v, listVertex.get(listVertex.size()-1))){
+					count--;
+				}
 			}
 		}
 		return count;
@@ -81,7 +90,7 @@ public class IntervalGraphRecognition<V> {
 					listVertexAvailable.add(listVertexToCompute.get(i));
 				}else{
 					if(checkVertexAvaiable(listVertexToCompute.get(i), listVertexToCheck, graph)){
-						Interval intv = new Interval(listInterval.get(listInterval.size()-1).max()+1,listInterval.get(listInterval.size()-1).max()+graph.degree(listVertexToCompute.get(i))+1,listVertexToCompute.get(i).toString());
+						Interval intv = new Interval(listInterval.get(listInterval.size()-1).max()+1,listInterval.get(listInterval.size()-1).max()+countNeighborIntersectYet(listVertexToCompute.get(i), listVertexAvailable, graph)+1,listVertexToCompute.get(i).toString());
 						listInterval.add(intv);	
 						listVertexAvailable.add(listVertexToCompute.get(i));
 					}else {
@@ -97,16 +106,13 @@ public class IntervalGraphRecognition<V> {
 									if(checkSameStart(intv, listInterval)>0){
 										intv.setMin(intv.min()+checkSameStart(intv, listInterval));
 									}
-									if(countNeighborIntersectYet(v, listVertexAvailable, graph)==0){
-										intv.setMax(intv.max()+1);
-									}
 									listInterval.add(intv);	
 									check = true;
 									break;
 								}
 							}
 							if(check==false){
-								Interval intv = new Interval(listInterval.get(0).min()+1,listInterval.get(listInterval.size()-1).max()+countNeighborIntersectYet(v, listVertexAvailable, graph)+1,v.toString());
+								Interval intv = new Interval(listInterval.get(0).min()+1,listInterval.get(listInterval.size()-1).max()+countNeighborIntersectYet(v, listVertexAvailable, graph),v.toString());
 								listInterval.add(intv);
 							}
 							listVertexAvailable.add(v);
@@ -122,5 +128,70 @@ public class IntervalGraphRecognition<V> {
 			}
 		}
 		return listInterval;
+	}
+	
+	private Map<Integer,ArrayList<Interval>> getMapInterval(ArrayList<Interval> listInterval) {
+		Collections.reverse(listInterval);
+		int count = (int)listInterval.get(0).max();
+		Map<Integer,ArrayList<Interval>> setIntervalIndependent = new TreeMap<Integer, ArrayList<Interval>>(Collections.reverseOrder());
+		for (Interval interval : listInterval) {
+			if(setIntervalIndependent.isEmpty()){
+				setIntervalIndependent.put(0, new ArrayList<Interval>());
+				setIntervalIndependent.get(0).add(interval);
+			}else{
+				boolean intersect = true;
+				for (Map.Entry<Integer, ArrayList<Interval>> item : setIntervalIndependent.entrySet()) {
+					if(!item.getValue().isEmpty())
+					{
+						boolean addInterval = true;
+						for (Interval itv : item.getValue()) {
+							if(interval.intersect(itv)){
+								addInterval = false;
+								break;
+							}
+						}
+						if(addInterval){
+							item.getValue().add(interval);
+							intersect = false;
+							break;
+						}
+					}			
+				}
+				if(intersect){
+					setIntervalIndependent.put(count-(int)interval.max(), new ArrayList<Interval>());
+					setIntervalIndependent.get(count-(int)interval.max()).add(interval);
+				}
+			}
+		}
+		return setIntervalIndependent;
+	}
+	
+	public void printIntervalGraph(ArrayList<Interval> listInterval) {
+		Map<Integer,ArrayList<Interval>> mapInterval = getMapInterval(listInterval);
+		for (Map.Entry<Integer, ArrayList<Interval>> item : mapInterval.entrySet()) {
+			for (int i = 0; i < item.getKey()+10; i++) {
+				System.out.print(" ");
+			}
+			for (int i=0;i<item.getValue().size();i++) {
+				if(i>0){
+					int temp = (int)item.getValue().get(i-1).min() - (int)item.getValue().get(i).max();
+					for (int j = 0; j < temp; j++) {
+						System.out.print(" ");
+					}
+				}
+				item.getValue().get(i).printInterval();
+			}		
+			System.out.println();
+		}
+	}
+	
+	public ArrayList<Interval> reverse(ArrayList<Interval> listInterval) {
+		double max = listInterval.get(listInterval.size()-1).max()+1;
+		ArrayList<Interval> listIntervalReverse = new ArrayList<Interval>();
+		for (int i = listInterval.size()-1; i >-1; i--) {
+			Interval intv = new Interval(max-listInterval.get(i).max(), max-listInterval.get(i).min(), listInterval.get(i).name());
+			listIntervalReverse.add(intv);
+		}
+		return listIntervalReverse;
 	}
 }

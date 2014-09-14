@@ -2,7 +2,6 @@
 import graph.ComparabilityGraph;
 import graph.DirectedEdge;
 import graph.Graph;
-import graph.MultiGraph;
 import graph.SimpleGraph;
 
 public class TestComparabilityGraph {
@@ -33,11 +32,8 @@ public class TestComparabilityGraph {
 		for (DirectedEdge<String> e : g.edges())
 			System.out.print(" (" + e.source() + "," + e.target() + ")");
 		System.out.println();
-		
-		ComparabilityGraph<String> comparabilityGraph = new ComparabilityGraph<String>();
-		
+		ComparabilityGraph<String> comparabilityGraph = new ComparabilityGraph<String>();	
 		boolean check = comparabilityGraph.checkComparabilityGraph(g.undirectedGraph());
-		
 		System.out.print("check comparability = "+ check);		
 		
 	}

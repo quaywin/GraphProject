@@ -47,6 +47,9 @@ public class IntervalGraphRecognition<V> {
 				}
 			}
 		}
+		if(!graph.areNeighbors(vertex, listVertex.get(listVertex.size()-1))){
+			count = count+2;
+		}
 		return count;
 	}
 	
@@ -61,24 +64,57 @@ public class IntervalGraphRecognition<V> {
 		return count;
 	}
 	
+	public ArrayList<V> orderingExtend(SimpleGraph<V, DirectedEdge<V>> graph,ArrayList<V> order) {
+		ArrayList<V> myOrder = new ArrayList<V>();
+		ArrayList<V> unCheck = new ArrayList<V>();
+		myOrder.add(order.get(0));
+		V x = myOrder.get(0);
+		V y = myOrder.get(0);
+		while (myOrder.size() < order.size()) {
+			for (V t : order) {
+				if(graph.areNeighbors(x, t)&&graph.areNeighbors(y, t)){
+					if(!myOrder.contains(t)){
+						myOrder.add(t);
+						y = t;
+						for (V z : order) {
+							if(graph.areNeighbors(y, z)&&graph.areNeighbors(x, z)){
+								if(!myOrder.contains(z)){
+									myOrder.add(z);
+									unCheck.add(t);
+									y=z;
+								}
+							}
+						}
+						if(y==t){
+							y=x;
+						}
+					}
+				}
+			}
+			if(myOrder.get(myOrder.size()-1)==x){
+				if(!unCheck.isEmpty()){
+					x = unCheck.get(0);
+					y = unCheck.get(0);
+					unCheck.remove(0);
+				}
+			}else{
+				x = myOrder.get(myOrder.size()-1);
+				y = myOrder.get(myOrder.size()-1);
+			}
+			
+		}
+		return myOrder;
+	}
+	
 	public ArrayList<Interval> generateFromGraphToSetInterval(SimpleGraph<V, DirectedEdge<V>> graph) {
 		ArrayList<Interval> listInterval = new ArrayList<Interval>();
 		ArrayList<V> listVertexToCheck = new ArrayList<V>();
 		ArrayList<V> listVertexUnavailable = new ArrayList<V>();
 		ArrayList<V> listVertexAvailable = new ArrayList<V>();
 		ArrayList<V> order = this.ordering(graph);
-		LexBFS<V> lexbfs = new LexBFS<V>();
 		ComparabilityGraph<V> comparabilityGraph = new ComparabilityGraph<V>();
 		SimpleGraph<V, DirectedEdge<V>> complementGraph = graph.complementaryGraph();
-		V firstVertex = graph.vertices().iterator().next();
-		for (V v : graph.vertices()) {
-			if(graph.degree(v)<graph.degree(firstVertex)){
-				firstVertex = v;
-			}
-		}
-		
-		ArrayList<V> listVertexToCompute = lexbfs.LexBFSOrdering(graph, firstVertex);
-		Collections.reverse(listVertexToCompute);
+		ArrayList<V> listVertexToCompute = orderingExtend(graph, order);
 		if(this.checkChordalGraph(order) && comparabilityGraph.checkComparabilityGraph(complementGraph.undirectedGraph())){
 			int n = listVertexToCompute.size();
 			for (int i = 0; i < n; i++) {
@@ -113,6 +149,9 @@ public class IntervalGraphRecognition<V> {
 							}
 							if(check==false){
 								Interval intv = new Interval(listInterval.get(0).min()+1,listInterval.get(listInterval.size()-1).max()+countNeighborIntersectYet(v, listVertexAvailable, graph),v.toString());
+								if(checkSameStart(intv, listInterval)>0){
+									intv.setMin(intv.min()+checkSameStart(intv, listInterval));
+								}
 								listInterval.add(intv);
 							}
 							listVertexAvailable.add(v);
@@ -194,4 +233,6 @@ public class IntervalGraphRecognition<V> {
 		}
 		return listIntervalReverse;
 	}
+	
+	
 }

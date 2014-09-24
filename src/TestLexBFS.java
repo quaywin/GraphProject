@@ -8,18 +8,17 @@ import graph.SimpleGraph;
 
 public class TestLexBFS {
 	static SimpleGraph<String, DirectedEdge<String>> g;
-	static final String ONE = "A";
-	static final String TWO = "B";
-	static final String THREE = "C";
-	static final String FOUR = "D";
-	static final String FIVE = "E";
-	static final String SIX = "F";
-	static final String SEVEN = "G";
+	static final String A = "A";
+	static final String B = "B";
+	static final String C = "C";
+	static final String D = "D";
+	static final String E = "E";
+	static final String F = "F";
+	static final String G = "G";
 	static Graph.Edge<String> E1;
 	public static void main(String[] args) {
-		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE,SIX};
-		String[][] edges = { { ONE, TWO }, { TWO, THREE } 
-		,{THREE,FOUR},{ FIVE, TWO },{ THREE, FIVE },{ THREE, SIX },{ FIVE, SIX },{ SIX, TWO } };
+		String[] vertices = { A, B, C, D, E,F,G};
+		String[][] edges = { { A, B },{ A, C },{ A, D }, { B, C } ,{C,D},{ C, E },{ C, F },{ D, F },{ F, G },{ E, D } };
 		g = new SimpleGraph<String, DirectedEdge<String>>();
 		for (String v : vertices)
 			g.addVertex(v);

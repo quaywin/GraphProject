@@ -14,6 +14,7 @@ public class ComparabilityGraph<V> {
 		//Create a undirected graph
 		SimpleGraph<V, DirectedEdge<V>> undirectedGraph = graph;
 		//Create a directed graph
+		
 		SimpleGraph<V, DirectedEdge<V>> directGraph = new SimpleGraph<V, DirectedEdge<V>>();
 		for (V v : graph.vertices()) {
 			directGraph.addVertex(v);

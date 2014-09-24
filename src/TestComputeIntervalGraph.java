@@ -8,19 +8,19 @@ import graph.SimpleGraph;
 
 public class TestComputeIntervalGraph {
 	static SimpleGraph<String, DirectedEdge<String>> g;
-	static final String ONE = "A";
-	static final String TWO = "B";
-	static final String THREE = "C";
-	static final String FOUR = "D";
-	static final String FIVE = "E";
-	static final String SIX = "F";
-	static final String SEVEN = "G";
+	static final String A = "A";
+	static final String B = "B";
+	static final String C = "C";
+	static final String D = "D";
+	static final String E = "E";
+	static final String F = "F";
+	static final String G = "G";
 	static Graph.Edge<String> E1;
 	public static void main(String[] args) {
-		String[] vertices = { ONE, TWO, THREE, FOUR, FIVE,SIX,SEVEN};
-		//String[][] edges = { { ONE, TWO },{ ONE, THREE },{ ONE, FOUR }, { TWO, THREE } ,{THREE,FOUR},{ FIVE, FOUR },{ THREE, FIVE },{ THREE, SIX },{ FOUR, SIX },{ SIX, SEVEN } };
-		//String[][] edges = { { ONE, TWO }, { TWO, THREE } ,{THREE,FOUR},{ FIVE, TWO },{ THREE, FIVE },{ THREE, SIX },{ FIVE, SIX },{ SIX, TWO },{ SIX, ONE } };
-		String[][] edges = { { ONE, TWO }, { TWO, THREE } ,{THREE,FOUR},{ THREE, SEVEN },{ THREE, SIX },{ SEVEN, SIX },{ FOUR, FIVE } };
+		String[] vertices = { A, B, C, D, E,F,G};
+		String[][] edges = { { A, B },{ A, C },{ A, D }, { B, C } ,{C,D},{ C, E },{ C, F },{ D, F },{ F, G },{ E, D } };
+		//String[][] edges = { { A, B }, { B, C } ,{C,D},{ E, B },{ C, E },{ C, F },{ E, F },{ F, B },{ F, A } };
+		//String[][] edges = { { A, B }, { B, C } ,{C,D},{ C, G },{ C, F },{ F, G },{ D, E } };
 		g = new SimpleGraph<String, DirectedEdge<String>>();
 		for (String v : vertices)
 			g.addVertex(v);
@@ -29,6 +29,18 @@ public class TestComputeIntervalGraph {
 		IntervalGraphRecognition<String> intervalGraphRecognition = new IntervalGraphRecognition<String>();
 		ArrayList<Interval> listInterval = intervalGraphRecognition.generateFromGraphToSetInterval(g);
 		if(intervalGraphRecognition.ordering(g)!=null){
+			/*System.out.print("LexBFS order = ");
+			
+			for (String strings : intervalGraphRecognition.orderingExtend(g, intervalGraphRecognition.ordering(g))) {
+				System.out.print(" " + strings);
+			}
+
+			System.out.println();
+			for (String strings : intervalGraphRecognition.ordering(g)) {
+				System.out.print(" " + strings);
+			}
+
+			System.out.println();*/
 			System.out.print("INTERVAL");
 			System.out.println();
 			for (Interval intv: intervalGraphRecognition.reverse(listInterval)){
